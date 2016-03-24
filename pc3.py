@@ -29,54 +29,77 @@ def process_lines(lines):
 	return cases
 
 def is_solvable(case):
-	# We are trying to 
+	# We perform a DFS and sum the node values of each subgraph
 
-	pass
+	class DFS():
+		def __init__(self,G, N):
+			self.C = {};	# Color
+			self.F = {};	# Finish time
+			self.D = {};	# Distance
+			self.P = {};	# Parent
+			self.t = 0;		# time
+			self.G = G;		# GRaph adj list
+			self.N = N;		# Node Values	
+			#init
+			for v in range(len(N)):
+				self.C[v] = 0
+				self.P[v] = None
+				self.F[v] = self.D[v] = float('inf')
+	
+	# graph
+	g = DFS(case['f'],case['o'])
+	def DFS_visit(g,u):
+		# Itiratively traverse graph
+		graph_sum = 0
+		edge = [u]
+		while True:
+			u = edge.pop()
+			graph_sum += g.N[u]
+			g.C[u] = 1
+			if u in g.G:
+				for v in g.G[u]:
+					if g.C[v] == 0:
+						g.C[v] = 1
+						edge += [v]
+			if len(edge) == 0:
+				return graph_sum
 
+	sums = [] # sums of each subgraph
+	for v in range(len(g.N)):
+		if g.C[v] == 0:
+			sums += [DFS_visit(g,v)]
 
-
+	return not any(sums)
 
 def mo_problems(lines):
 	cases = process_lines(lines)
 
 	results = []
 	for case in cases:
-		results += [is_solvable(case)]
-		print(case)
-		print(sum(case['o']))
+		result = is_solvable(case)
+		results += [result]
 
-	return '\n'.join(results)
+	return "\n".join(['POSSIBLE' if r else 'IMPOSSIBLE' for r in results])
+
+def gen_case():
+	# generate a case for testing
+	pass
 
 def test():
-	problems = [
-	"""
-	2 
-	5 3 
-	100 
-	-75 
-	-25 
-	-42 
-	42 
-	0 1 
-	1 2 
-	3 4 
-	4 2 
-	15 
-	20 
-	-10 
-	-25 
-	0 2 
-	1 3	
-	""",
-	]
-	time_limit = 3.
+	problems = []
+	for i in range(1,5):
+		with open('test_files/pc3/test'+str(i),'r') as f:
+			problems += ["".join(f.readlines())]
+
+	time_limit = 7.
 	times = []
 	for p in problems:
-		p = [line.strip().split() for line in p.split('\n')][1:-1]
+		p = [line.strip().split() for line in p.split('\n')][0:-1]
 		start = time.clock()
 		sol = mo_problems(p)
-		if sol != " ".join(p[-1]):
-			print(sol, p[-1])
+		ans = "\n".join([e[0] for e in p[-1 * int(p[0][0]):]])
+		if sol != ans:
+			print(sol, ans)
 			assert(sol == p[-1])
 
 		end = time.clock()
@@ -86,7 +109,6 @@ def test():
 			print (t, p)
 
 	if all([t< time_limit for t in times]):
-		print(times)
 		print("All Solved within " + str(time_limit) + "s")
 
 if __name__ == "__main__":
