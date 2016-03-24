@@ -55,7 +55,22 @@ def dependency(lines):
                 edge += [P[node]]
     '''
 
-    return '1 5 3 2 4'
+    return return_order(C)
+
+def return_order(children):
+    new_list=[]
+    for c in children:
+        if c not in new_list:
+            new_list.append(c)
+            for nc in children[c]:
+                if nc in children:# nc is also a key
+                    newlist_2 = children[nc]
+                    new_list.insert(0, newlist_2)
+                else:
+                    newlist_2 =[]
+                    newlist_2.insert(0,nc)
+    return new_list
+
 
 def test():
     problems = [
@@ -101,4 +116,4 @@ def test():
         print("All Solved within " + str(time_limit) + "s")
 
 if __name__ == "__main__":
-	test()
+    test()
