@@ -1,35 +1,53 @@
 import time, sys, math, random, queue, random
-from depq import DEPQ
+from heapq import heapify, heappop, heappush
+
+# Inspired by https://programmingpraxis.com/2013/09/27/double-ended-priority-queues/
+class DEPQ(object):
+	def __init__(self):
+		self.entry_finder = {}
+		self.counter = 0
+		self.minq, self.maxq = [], []
+
+	def next_id(self):
+		self.counter += 1
+		return self.counter
+
+	def insert(self, e, p, id_=None):
+		id_ = self.next_id()
+		mine, maxe = [p, e, id_],  [-p, e, id_]
+		heappush(self.minq, mine)
+		heappush(self.maxq, maxe)
+		self.entry_finder[id_] = mine, maxe
+
+	def min(self):
+		return self.minq[0][0]
+
+	def max(self):
+		return -self.maxq[0][0]
+
+	def pop_min(self):
+		p, e, id_ = heappop(self.minq)
+		entries = self.entry_finder.pop(id_)
+		entries[1][2] = float('-inf')
+		return e, p
+
+	def pop_max(self):
+		p, e, id_ = heappop(self.maxq)
+		entries = self.entry_finder.pop(id_)
+		entries[0][2] = float('-inf')
+		return e, -p
+
+	def __setitem__(self, p, e):
+		self.insert(e, p)
+
+	def __len__(self):
+		return len(self.entry_finder)
 
 class PowerHash():
 	def __init__(self,k,s=3):
 		self.size = s
-		self.places = 10**int(s)
 		self.powers = [10**int(i*s) for i in range(k)]
 		self.hashes = {}
-		self.mem = {i:{} for i in range(k)}
-		self.hash_counter = 0
-		self.unique = {}
-
-	def get(self,h,i):
-		# return 3 digits at index i*3
-		return ((self.hashes[h]//self.powers[i])%self.places)
-		if h not in self.mem[i]:
-			self.mem[i][h] = ((self.hashes[h]//self.powers[i])%self.places)
-		return self.mem[i][h]
-
-	def hash(self,a):
-		u = hash(a)
-		self.hash_counter += 2
-		if u not in self.unique: self.unique[u] = self.hash_counter
-		return self.unique[u]
-
-	def array_hash(self, S):
-		h = 0
-		for i in range(len(S)):
-			e = S[i]
-			h += e*(10**(i*3))
-		return h
 
 	def __setitem__(self,h,a):
 		self.hashes[h] = a
@@ -38,22 +56,19 @@ class PowerHash():
 		return self.hashes[h]
 
 def smallest_sums(lines):
+	# INIT
 	k = int(lines[0][0])
-	km1 = k - 1
-	kp1 = k + 1
+	km1,kp1 = k - 1,k + 1
 	A = [[int(e) for e in l] for l in lines[1:-1]] # The Super Array
 	for a in A:
 		a.sort()
+	h,s = 0,sum([A[i][0] for i in range(k)])
 	S = []	# Sums
-	P = PowerHash(k,3)		# ( , granularity of PowerHash - 1 is risky- >=3 is ideal)
-	h0 = 0
-	s0 = sum([A[i][0] for i in range(k)])
-	P[h0] = 0
-	#E = queue.PriorityQueue() # edge: next smallest sums k:sum v:(index array)
-	#E.put((s0,h0)) # (sum,hash) for first element
-	E = DEPQ()
-	E.insert(h0,s0)
-	X = {h0:{}}		# explored sums, k:str(index array) v:- ~hash([0,...]) = 0
+	P = PowerHash(k,3)	
+	P[h] = 0
+	E = DEPQ()	# EDGE access to max,min in order to keep track of top k sums
+	E[s] = h
+	X = {h:{}}	# k: hash v: a dictionary of all non-zero indices in this sum
 
 	def update(Xh,i,di,hidi):
 		Xh[i] = 1 if i not in Xh else hidi
@@ -64,29 +79,20 @@ def smallest_sums(lines):
 		if Xh[i] == 0: del Xh[i]
 
 	def explore_neighbour(A,Ai,P,Ph,E,X,Xh,S,h,h_i,i,di):
-		# Make a uniquely hashable token in the form (1:[list of indices]2:[list of indices])
-		#update(X[h],i,di)
-		#t = str(X[h])
-		#rollback(X[h],i,di)
-		#h_ = hash(t)
-		a = Ph + (di * P.powers[i])		# new big int array		0.5s		
-		h_ = hash(a) 	# the hash of the new   			< 0.5s
+		a = Ph + (di * P.powers[i])		# new big int array		
+		h_ = hash(a) 	# the hash of the new array, used for fast dictionary			
 		if h_ not in X:
-			P[h_] = a				# 0.5s
+			P[h_] = a				
 			hidi = h_i + di
-			s = S[-1] - (Ai[h_i] - Ai[hidi])		# 1s
-			#E.put((s,h_))
-			if E.size() < k or E.size()==k and s < E.high():
-				E.insert(h_,s)	
-				X[h_] = Xh.copy() 	# Add to explored set 			0.5s
+			s = S[-1] - (Ai[h_i] - Ai[hidi])	
+			if len(E) < k or len(E)==k and s < E.max():
+				E[s] = h_	
+				X[h_] = Xh.copy() 	# Add to explored set 		
 				update(X[h_],i,di,hidi)
-				if E.size() == kp1: E.popfirst()
+				if len(E) == kp1: E.pop_max()
 
 	for _ in range(k):
-		# Remove smallest from edge (sum, hash)
-		h,s = E.poplast()
-		#s,h = E.get()
-		# Visit smallest
+		h,s = E.pop_min()
 		S += [s]
 		Xh = X[h]
 		Ph = P[h]
@@ -95,7 +101,6 @@ def smallest_sums(lines):
 			h_i = 0 if i not in Xh else Xh[i]		
 			if h_i > 0: explore_neighbour(A,Ai,P,Ph,E,X,Xh,S,h,h_i,i,-1) # Potentially uneccessary
 			if h_i < km1: explore_neighbour(A,Ai,P,Ph,E,X,Xh,S,h,h_i,i,1)
-		# print(E.size(),_)
 
 	S.sort()
 	return S
@@ -134,7 +139,7 @@ def test_time(n,k):
 def test():
     # Load test files
     problems = []
-    for i in range(1,5):
+    for i in range(1,6):
         with open('test_files/pc4/test'+str(i),'r') as f:
             problems += ["".join(f.readlines())]
 
@@ -157,5 +162,5 @@ def test():
         print("All Solved within " + str(time_limit) + "s")
 
 if __name__ == "__main__":
-	# test()
-	test_time(100,750)
+	test()
+	#test_time(100,750)
