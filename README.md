@@ -10,7 +10,8 @@ Need to be tested on school computers
 
 ### PC2
 
-I'm Still a little confused about how elements with no dependencies are ordered...
+***SOLVED** for all test cases
+**TODO** Add comments, test for correctness
 
 ### PC3
 
