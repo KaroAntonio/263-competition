@@ -86,6 +86,7 @@ def gen_case():
 	pass
 
 def test():
+	# Load test files
 	problems = []
 	for i in range(1,5):
 		with open('test_files/pc3/test'+str(i),'r') as f:
