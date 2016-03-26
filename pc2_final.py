@@ -1,14 +1,14 @@
 import time, math, sys
 
 def dependency(lines):
-    n = lines[0][0] # num packages
-    m = lines[0][1] # num rules
+    n = lines[0][0] # num of packages
+    m = lines[0][1] # num of rules
     # Build Tree
     C = {} #children
 
     for l in lines[1:-1]:
         # Set Children
-        # mapping dependent integers to their list of depended on integers
+        # mapping dependent nodes to their list of depended on nodes
         C[int(l[0])] = [ int(c) for c in l[2:]]
     
     # Find nodes that are not dependent on other nodes
@@ -24,9 +24,10 @@ def dependency(lines):
     t = int(n)
     checker = 0
 
-    # starter only looks at each node
+    # starter looks at each node
     while starter < (t+1) and len(output) < t:
         if starter not in output:
+            # If node has no dependencies, can add it to output
             if starter in keys:
                 output.append(starter)
                 starter = 1
@@ -38,12 +39,13 @@ def dependency(lines):
                 if checker == len(C.get(starter)):
                     output.append(starter)
                     starter = 1
+                # This runs if all the nodes' dependencies weren't in output
                 else:
                     starter = starter + 1
 
                 # Reseting checker for next node
                 checker = 0
-
+        # Runs if starter was already in output
         else:
             starter = starter + 1
 
@@ -272,6 +274,15 @@ def test():
 76 36 57 75 46 98 79 80 34 29 12 32 26 89 69 71 65 64 21 49 50 20 24 6 60 56 35 61 72 54 81 53 17 39 90 19 10 13 
 18 13 64 22 47 35 48 28 37 75 52 29 40 57 92
 1 29 56 2 59 64 9 12 23 67 84 94 10 37 45 68 74 91 92 8 15 22 62 75 100 3 7 27 32 49 57 61 90 13 35 11 40 73 6 89 93 5 50 33 71 14 43 65 36 63 31 82 83 19 52 34 53 96 26 48 42 51 41 54 69 46 87 20 30 60 85 98 16 86 88 99 28 39 44 47 18 80 97 21 24 55 66 72 17 25 78 79 70 77 81 4 38 58 76 95
+    """,
+    """
+    1 0
+    1
+    """,
+    """
+    4 1
+    1 3 4 2
+    2 3 4 1
     """
     ]
     time_limit = 0.5
