@@ -10,8 +10,8 @@ Need to be tested on school computers
 
 ### PC2
 
-***SOLVED** for all test cases
-**TODO** Add comments, test for correctness
+**SOLVED** for all test cases, tested for correctness and time
+**TODO** Add test cases
 
 ### PC3
 
