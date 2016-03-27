@@ -26,8 +26,6 @@ int shortest_seq(int n, int x, int y, int u, int d)
 		for(int i = 0; i < 2; ++i) {
 			int move = moves[i];
 			int floor_ = floor + move;	
-			// int &stored_val = depth[floor_];
-			// if (stored_val == 0 && floor_ <= n && floor >= 1) {
 			if (depth.find(floor_) == depth.end() && floor_ <= n && floor >= 1) {
 				depth[floor_] = depth[floor] + 1;
 				back += 1;

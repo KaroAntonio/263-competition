@@ -9,17 +9,20 @@ Need to be tested on school computers
 **TODO** Test for correctness
 
 ### PC2
-
-**SOLVED** for all test cases, tested for correctness and time
-**TODO** Add test cases
+ 
+**SOLVED**  for all test cases  
+**TODO** Time Test, Correctness Test (generate random problem/solution sets and test on those)
 
 ### PC3
 
 **SOLVED*** for all test cases   
-**TODO** Time and Correctness test  
+**TIME TESTED** Passes at max paramenters  
+**FORMATTED** ready for submission  
+**TODO** Correctness test  
 
 ### PC4
 
 **SOLVED*** for all test cases  
 **TIME TESTED** Passes Time Test k = 750  
+**FORMATTED** ready for submission  
 **TODO** Test for correctness  

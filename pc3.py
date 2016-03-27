@@ -1,4 +1,4 @@
-import math, sys, time
+import math, sys, time, random
 
 def process_lines(lines):
 	cases = []
@@ -81,14 +81,41 @@ def mo_problems(lines):
 
 	return "\n".join(['POSSIBLE' if r else 'IMPOSSIBLE' for r in results])
 
-def gen_case():
-	# generate a case for testing
-	pass
+def gen_problems(num, n=10000, m=50000, T=10):
+	# gen problems, no sols
+	r = random.random
+	problems = []
+	for _ in range(num):
+		problem = [[T]]
+		for case in range(T):
+			problem += [[n,m]]
+			for i in range(n):
+				problem += [[int(((r()*2)-1)*10000)]]
+			for i in range(m):
+				problem += [[int(r()*n),int(r()*n)]]
+		problems += [problem]
+
+	return problems
+
+def test_time(n):
+	problems = gen_problems(n)
+	time_limit = 7.
+	times = []
+	for p in problems:
+		start = time.clock()
+		sol = mo_problems(p)
+		end = time.clock()
+		t = end-start
+		times += [t]
+		print (t)
+
+	if all([t< time_limit for t in times]):
+		print("All Solved within " + str(time_limit) + "s")
 
 def test():
 	# Load test files
 	problems = []
-	for i in range(1,5):
+	for i in range(1,3):
 		with open('test_files/pc3/test'+str(i),'r') as f:
 			problems += ["".join(f.readlines())]
 
@@ -96,6 +123,7 @@ def test():
 	times = []
 	for p in problems:
 		p = [line.strip().split() for line in p.split('\n')][0:-1]
+		print(p)
 		start = time.clock()
 		sol = mo_problems(p)
 		ans = "\n".join([e[0] for e in p[-1 * int(p[0][0]):]])
@@ -112,5 +140,18 @@ def test():
 	if all([t< time_limit for t in times]):
 		print("All Solved within " + str(time_limit) + "s")
 
+def run():
+	f = sys.stdin
+	lines = []
+	for line in f:
+		if line == None or len(line.strip()) == 0:
+			break
+		lines += [line.strip().split()]
+	
+	print(mo_problems(lines))
+	exit(0)
+
 if __name__ == "__main__":
-	test()
+	run()
+	#test()
+	#test_time(10)

@@ -161,6 +161,20 @@ def test():
     if all([t< time_limit for t in times]):
         print("All Solved within " + str(time_limit) + "s")
 
+def run():
+	f = sys.stdin
+	lines = []
+	for line in f:
+		if line == None or len(line.strip()) == 0:
+			break
+		lines += [line.strip().split()]
+
+	sol = [str(s) for s in smallest_sums(lines)]
+
+	print(" ".join(sol).strip())
+	exit(0)
+
 if __name__ == "__main__":
-	test()
+	run()
+	#test()
 	#test_time(100,750)

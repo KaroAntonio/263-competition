@@ -21,13 +21,14 @@ def shortest_seq(n,x,y,u,d):
 	while True:
 		front += 1
 		floor = edge[front]
+		depth_floor = depth[floor]
 		if floor == y:
-			return depth[floor]
+			return depth_floor
 
 		for move in moves:
 			floor_ = floor + move
 			if floor_ not in depth and floor_ <= n and floor_ >= 1:
-				depth[floor_] = depth[floor]+moves[move]
+				depth[floor_] = depth_floor+moves[move]
 				back += 1
 				edge[back] = floor_
 
@@ -60,7 +61,8 @@ def test(problems = None):
 				[5000000, 4923847, 1, 36465, 58558, 51297],
 				[5000000, 1, 2345, 12344,43111, 38276],
 				[20, 19, 2, 5, 11, 3],
-				[4731341, 827037, 3853750, 1625424, 2564489, 3839464]]
+				[4731341, 827037, 3853750, 1625424, 2564489, 3839464],
+				[4458699, 3031437, 2470168, 124451, 360544, 483911]]
 	
 
 	time_limit = 5.
@@ -76,8 +78,7 @@ def test(problems = None):
 		end = time.clock()
 		t = end-start
 		times += [t]
-		if t > time_limit:
-			print (t, p)
+		print (t, p)
 
 	if all([t< time_limit for t in times]):
 		print(times)
@@ -102,7 +103,7 @@ def gen_problems(num):
 if __name__ == "__main__":
 
 	test_time(gen_problems(100))
-	# test()
+	#test()
 
 	'''
     f = sys.stdin
