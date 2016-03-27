@@ -20,6 +20,9 @@ def shortest_seq(n,x,y,u,d):
         if y > x:
                 if (y - x) < u and (y - x) < d and (y == x):
                         return 0
+        elif x > y:
+                if (x - y) < u and (x - y) < d and (y == x):
+                        return 0
 
         front = -1
         back = 0
@@ -107,8 +110,8 @@ def gen_problems(num):
 
 if __name__ == "__main__":
 
-        # test_time(gen_problems(100))
-        test()
+        test_time(gen_problems(100))
+        # test()
 
         '''
     f = sys.stdin
