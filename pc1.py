@@ -44,7 +44,7 @@ def shortest_seq(n,x,y,u,d):
                         return 0
 
 def test_time(problems = None, time_limit = 5.):
-                                
+
         times = []
         for p in problems:
                 start = time.clock()
@@ -59,7 +59,7 @@ def test_time(problems = None, time_limit = 5.):
         if all([t< time_limit for t in times]):
                 print("All Solved within " + str(time_limit) + "s")
 
-        
+
 def test(problems = None):
         if problems == None:
                 problems = [
@@ -70,7 +70,7 @@ def test(problems = None):
                                 [5000000, 1, 2345, 12344,43111, 38276],
                                 [20, 19, 2, 5, 11, 3],
                                 [4731341, 827037, 3853750, 1625424, 2564489, 3839464]]
-        
+
 
         time_limit = 5.
 
@@ -92,7 +92,7 @@ def test(problems = None):
                 print(times)
                 print("All Solved within " + str(time_limit) + "s")
 
-        
+
 
 def gen_problems(num):
         # gen num problems
@@ -108,10 +108,20 @@ def gen_problems(num):
 
         return problems
 
+def run():
+        f = sys.stdin
+        lines = []
+        line = f.readline().strip()
+        lines += line.split()
+        seq_len = shortest_seq(int(lines[0]),int(lines[1]),int(lines[2]),int(lines[3]),int(lines[4]))
+        print(seq_len)
+        exit(0)
+
 if __name__ == "__main__":
 
-        test_time(gen_problems(100))
+        # test_time(gen_problems(100))
         # test()
+        run()
 
         '''
     f = sys.stdin
