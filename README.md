@@ -4,14 +4,16 @@ Need to be tested on school computers
 
 ### PC1
 
-**SOLVED** for all test cases  
+**SOLVED*** for all test cases  
 **TIME TESTED** Runs over time on maybe 5% of randomly generated problems by ~1s  
 **TODO** Test for correctness
 
 ### PC2
  
-**SOLVED**  for all test cases  
-**TODO** Time Test, Correctness Test (generate random problem/solution sets and test on those)
+**SOLVED***  for all test cases  
+**TODO**   
+**TIME TESTED**  
+**FORMATTED**  
 
 ### PC3
 
