@@ -100,22 +100,17 @@ def gen_problems(num):
 
 	return problems
 
-if __name__ == "__main__":
+def run():
+	f = sys.stdin
+	lines = []
+	line = f.readline().strip()
+	lines += line.split()
+	seq_len = shortest_seq(int(lines[0]),int(lines[1]),int(lines[2]),int(lines[3]),int(lines[4]))
+	print(seq_len)
+	exit(0)
 
-	test_time(gen_problems(100))
+if __name__== "__main__":
+	run()
+	#test_time(gen_problems(100))
 	#test()
 
-	'''
-    f = sys.stdin
-    line = f.readline().strip()
-    n = int(line)
-    line = f.readline().strip()
-    array = line.split()
-    for i in range(n):
-        if array[i] == '42':
-            print(i+1)
-            exit(0)
-
-
-    print(0)
-	'''
